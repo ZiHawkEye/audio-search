@@ -1,11 +1,16 @@
+# Reference: https://www.digitalocean.com/community/tutorials/how-to-use-an-sqlite-database-in-a-flask-application
+# Reference: https://thedavidmasters.com/2024/09/11/how-to-build-and-run-a-flask-api-with-openais-whisper-local-model-using-docker/
+
 from flask import Flask, render_template, request, jsonify
 import whisper
 import os
 import tempfile
 import sqlite3
 from pydub import AudioSegment
+from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
+
 
 # Load the Whisper model when the app starts
 model = whisper.load_model("base")
@@ -56,16 +61,19 @@ def transcribe():
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     finally:
-        # Clean up the temporary file
         os.remove(tmp_file_path)
 
 @app.route('/transcriptions', methods=['GET'])
+@cross_origin()
 def transcriptions():
     # Retrieves all transcriptions from the database
     conn = get_db_connection()
     transcriptions = conn.execute('SELECT * FROM transcriptions').fetchall()
     conn.close()
-    return render_template('transcriptions.html', transcriptions=transcriptions)
+    # Convert the fetched data to a list of dictionaries for JSON serialization
+    transcriptions_list = [{'id': row[0], 'title': row[1], 'content': row[2]} for row in transcriptions]
+    
+    return jsonify(transcriptions=transcriptions_list), 200
 
 @app.route('/search', methods=['GET'])
 def search():

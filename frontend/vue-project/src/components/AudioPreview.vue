@@ -1,3 +1,4 @@
+// Reference: https://github.com/canopas/vue-file-upload/tree/main
 <template>
 	<div class="container">
 		<div>
@@ -43,9 +44,9 @@
 			submitFile(){
 				let formData = new FormData();
 				
-				formData.append('file', this.file);
+				formData.append('audio', this.file);
 				
-				axios.post( '/audio-file',
+				axios.post( 'http://127.0.0.1:5000/transcribe',
 					formData,
 					{
 						headers: {

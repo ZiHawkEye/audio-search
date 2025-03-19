@@ -1,44 +1,44 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-	<single-file/>
-	<multiple-files/>
-	<select-files/>
-	<file-progress/>
-	<drag-and-drop/>
-	<drag-and-drop-instant/>
-	<single-image-preview/>
-	<multiple-images-preview/>
-	<audio-preview/>
-	<video-preview/>
-	<csv-preview/>
-	<preview-csv/>
+	<div>
+		<audio-preview />
+		<search-bar />
+		<pre>{{ pretty(items) }}</pre>
+	</div>
 </template>
 
 <script>
-import SingleFile from './components/SingleFile.vue'
-import MultipleFiles from './components/MultipleFiles.vue';
-import SelectFiles from './components/SelectFiles.vue';
-import FileProgress from './components/FileProgress.vue';
-import DragAndDrop from './components/DragAndDrop.vue';
-import DragAndDropInstant from './components/DragAndDropInstant.vue';
-import SingleImagePreview from './components/SingleImagePreview.vue';
-import MultipleImagesPreview from './components/MultipleImagesPreview.vue';
 import AudioPreview from './components/AudioPreview.vue';
+import SearchBar from './components/SearchBar.vue';
+import axios from 'axios';
 
 export default {
   name: 'App',
   components: {
-    SingleFile,
-	MultipleFiles,
-	SelectFiles,
-	FileProgress,
-	DragAndDrop,
-	DragAndDropInstant,
-	SingleImagePreview,
-	MultipleImagesPreview,
 	AudioPreview,
+	SearchBar,
+  },
+  data() {
+	return {
+		items: [],
+	}
+  },
+  mounted() {
+    axios.get('http://127.0.0.1:5000/transcriptions')
+      .then(response => {
+		console.log(response.data)
+        this.items = response.data;
+      })
+      .catch(error => {
+        console.error("Error fetching data:", error);
+      });
+  },
+  methods: {
+    pretty(value) {
+      return JSON.stringify(value, null, 2);
+    }
   }
 }
+
 </script>
 
 <style>
