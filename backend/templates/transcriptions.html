@@ -1,0 +1,12 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>{% block title %} Transcriptions {% endblock %}</h1>
+    {% for transcription in transcriptions %}
+        <div class='transcription'>
+            <p>{{ transcription['created'] }}</p>
+            <h2>{{ transcription['title'] }}</h2>
+            <p>{{ transcription['content'] }}</p>
+        </div>
+    {% endfor %}
+{% endblock %}
