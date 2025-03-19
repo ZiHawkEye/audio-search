@@ -48,8 +48,10 @@ def transcribe():
         transcription = transcribe_audio(tmp_file_path)
         # Insert transcription to database
         conn = get_db_connection()
-        transcriptions = conn.execute(f'''INSERT INTO transcriptions (title, content) VALUES ('{tmp_file_path}', '{transcription}')''').fetchall()
+        conn.execute('INSERT INTO transcriptions (title, content) VALUES (?, ?)', (tmp_file_path, transcription))
+        conn.commit()
         conn.close()
+
         return jsonify({'transcription': transcription}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
@@ -63,7 +65,7 @@ def transcriptions():
     conn = get_db_connection()
     transcriptions = conn.execute('SELECT * FROM transcriptions').fetchall()
     conn.close()
-    return render_template('transcriptions.html', posts=transcriptions)
+    return render_template('transcriptions.html', transcriptions=transcriptions)
 
 @app.route('/search', methods=['GET'])
 def search():
