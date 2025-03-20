@@ -26,13 +26,18 @@
     data() {
       return {
         file: '',
+		fileName: '',
       }
     },
 
     methods: {
       handleFileUpload(event) {
         this.file = event.target.files[0]
-        this.previewAudio()
+		if (this.file) {
+			this.fileName = this.file.name;
+			console.log('Uploaded file name:', this.fileName);
+			this.previewAudio();
+		}
       },
 
       previewAudio() {
@@ -49,6 +54,7 @@
         let formData = new FormData()
 
         formData.append('audio', this.file)
+        formData.append('filename', this.fileName)
 
         axios
           .post('http://127.0.0.1:5000/transcribe', formData, {

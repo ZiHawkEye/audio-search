@@ -45,6 +45,7 @@ def transcribe():
         return jsonify({'error': 'No audio file provided'}), 400
     
     audio_file = request.files['audio']
+    filename = request.form['filename']
 
     with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
         audio_file.save(tmp_file.name)
@@ -53,7 +54,7 @@ def transcribe():
         transcription = transcribe_audio(tmp_file_path)
 
         conn = get_db_connection()
-        conn.execute('INSERT INTO transcriptions (title, content) VALUES (?, ?)', (tmp_file_path, transcription))
+        conn.execute('INSERT INTO transcriptions (title, content) VALUES (?, ?)', (filename, transcription))
         conn.commit()
         conn.close()
 
@@ -96,7 +97,7 @@ def search():
     logging.info(f'Received search title: {title}')  # Log the title
 
     conn = get_db_connection()
-    transcriptions = conn.execute('SELECT * FROM transcriptions WHERE LOWER(content) LIKE LOWER(?)', ('%' + title.strip() + '%',)).fetchall()
+    transcriptions = conn.execute('SELECT * FROM transcriptions WHERE LOWER(title) LIKE LOWER(?)', ('%' + title.strip() + '%',)).fetchall()
     conn.commit()
     conn.close()
 
