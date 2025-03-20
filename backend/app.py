@@ -71,7 +71,7 @@ def transcriptions():
     transcriptions = conn.execute('SELECT * FROM transcriptions').fetchall()
     conn.close()
     # Convert the fetched data to a list of dictionaries for JSON serialization
-    transcriptions_list = [{'id': row[0], 'title': row[1], 'content': row[2]} for row in transcriptions]
+    transcriptions_list = [{'id': row[0], 'title': row[2], 'content': row[3]} for row in transcriptions]
     
     return jsonify(transcriptions=transcriptions_list), 200
 

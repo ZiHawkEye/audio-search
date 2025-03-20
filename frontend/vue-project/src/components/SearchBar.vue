@@ -19,12 +19,28 @@
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  let input = ref('')
-  const transcriptions = ['apple', 'banana', 'orange'] // to be changed
-  function filteredList() {
-    return transcriptions.filter((transcription) =>
-      transcription.toLowerCase().includes(input.value.toLowerCase())
+  import { ref, onMounted } from 'vue'
+  import axios from 'axios'
+
+  // Define reactive state
+  const transcriptions = ref([])
+  const input = ref('')
+
+  onMounted(() => {
+    axios
+      .get('http://127.0.0.1:5000/transcriptions')
+      .then((response) => {
+        console.log(response.data.transcriptions)
+        transcriptions.value = response.data.transcriptions
+      })
+      .catch((error) => {
+        console.error('Error fetching data:', error)
+      })
+  })
+
+  const filteredList = () => {
+    return transcriptions.value.filter((transcription) =>
+      transcription.content.toLowerCase().includes(input.value.toLowerCase())
     )
   }
 </script>
