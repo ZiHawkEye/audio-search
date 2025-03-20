@@ -26,18 +26,18 @@
     data() {
       return {
         file: '',
-		fileName: '',
+        fileName: '',
       }
     },
 
     methods: {
       handleFileUpload(event) {
         this.file = event.target.files[0]
-		if (this.file) {
-			this.fileName = this.file.name;
-			console.log('Uploaded file name:', this.fileName);
-			this.previewAudio();
-		}
+        if (this.file) {
+          this.fileName = this.file.name
+          console.log('Uploaded file name:', this.fileName)
+          this.previewAudio()
+        }
       },
 
       previewAudio() {
