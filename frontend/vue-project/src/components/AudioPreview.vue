@@ -2,9 +2,7 @@
 <template>
 	<div class="container">
 		<div>
-			<h2>Audio File Preview</h2>
-			<hr/>
-			<label>Audio File
+			<label>Upload an audio file for transcription
 				<input type="file" accept="audio/*" @change="handleFileUpload( $event )"/>
 			</label>
 			<br>
