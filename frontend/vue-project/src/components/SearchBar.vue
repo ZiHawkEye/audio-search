@@ -18,6 +18,7 @@
   </div>
 </template>
 
+// Note: uses script setup instead of script
 <script setup>
   import { ref, onMounted } from 'vue'
   import axios from 'axios'
@@ -26,6 +27,7 @@
   const transcriptions = ref([])
   const input = ref('')
 
+  // Makes a request to the backend once mounted
   onMounted(() => {
     axios
       .get('http://127.0.0.1:5000/transcriptions')
@@ -38,6 +40,7 @@
       })
   })
 
+  // Filters for transcriptions by their content
   const filteredList = () => {
     return transcriptions.value.filter((transcription) =>
       transcription.content.toLowerCase().includes(input.value.toLowerCase())

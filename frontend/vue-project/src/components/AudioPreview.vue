@@ -18,6 +18,7 @@
   </div>
 </template>
 
+// Note: uses script instead of script setup
 <script>
   import axios from 'axios'
 

@@ -11,11 +11,10 @@ from flask_cors import CORS, cross_origin
 
 app = Flask(__name__)
 
-
-# Load the Whisper model when the app starts
 model = whisper.load_model("base")
 
 def get_db_connection():
+    # Gets the SQL DB connection
     conn = sqlite3.connect('database.db')
     conn.row_factory = sqlite3.Row
     return conn
@@ -32,7 +31,6 @@ def transcribe_audio(file_path):
         file_path = file_path.rsplit('.', 1)[0] + '.wav'
         audio.export(file_path, format='wav')
 
-    # Transcribe the audio file using the local Whisper model
     result = model.transcribe(file_path)
     return result['text']
 
@@ -45,14 +43,12 @@ def transcribe():
     
     audio_file = request.files['audio']
 
-    # Save the uploaded file to a temporary location
     with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
         audio_file.save(tmp_file.name)
         tmp_file_path = tmp_file.name
     try:
-        # Transcribe the audio file
         transcription = transcribe_audio(tmp_file_path)
-        # Insert transcription to database
+
         conn = get_db_connection()
         conn.execute('INSERT INTO transcriptions (title, content) VALUES (?, ?)', (tmp_file_path, transcription))
         conn.commit()
@@ -71,7 +67,7 @@ def transcriptions():
     conn = get_db_connection()
     transcriptions = conn.execute('SELECT * FROM transcriptions').fetchall()
     conn.close()
-    # Convert the fetched data to a list of dictionaries for JSON serialization
+
     transcriptions_list = [{'id': row[0], 'title': row[2], 'content': row[3]} for row in transcriptions]
     
     return jsonify(transcriptions=transcriptions_list), 200
@@ -79,7 +75,6 @@ def transcriptions():
 @app.route('/search', methods=['GET'])
 def search():
     # Performs a full-text search on transcriptions based on audio file name. (You are given 3 audio files to use for this assignment)
-
     return 'Status of the service', 200
 
 if __name__ == '__main__':
