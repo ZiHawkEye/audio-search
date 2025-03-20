@@ -2,7 +2,6 @@
   <div>
     <audio-preview />
     <search-bar />
-    <pre>{{ pretty(items) }}</pre>
   </div>
 </template>
 

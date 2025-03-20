@@ -37,6 +37,7 @@ def transcribe_audio(file_path):
     return result['text']
 
 @app.route('/transcribe', methods=['POST'])
+@cross_origin()
 def transcribe():
     # Accepts audio files, performs transcription and save results in database.
     if 'audio' not in request.files:

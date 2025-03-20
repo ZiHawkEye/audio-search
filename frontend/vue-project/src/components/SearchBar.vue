@@ -11,7 +11,7 @@
     v-for="transcription in filteredList()"
     :key="transcription"
   >
-    <p>{{ transcription }}</p>
+    <p>{{ transcription.content }}</p>
   </div>
   <div class="item error" v-if="input && !filteredList().length">
     <p>No results found!</p>
