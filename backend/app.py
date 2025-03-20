@@ -1,6 +1,7 @@
 # Reference: https://www.digitalocean.com/community/tutorials/how-to-use-an-sqlite-database-in-a-flask-application
 # Reference: https://thedavidmasters.com/2024/09/11/how-to-build-and-run-a-flask-api-with-openais-whisper-local-model-using-docker/
 
+import logging
 from flask import Flask, render_template, request, jsonify
 import whisper
 import os
@@ -8,6 +9,8 @@ import tempfile
 import sqlite3
 from pydub import AudioSegment
 from flask_cors import CORS, cross_origin
+
+logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 
@@ -66,16 +69,42 @@ def transcriptions():
     # Retrieves all transcriptions from the database
     conn = get_db_connection()
     transcriptions = conn.execute('SELECT * FROM transcriptions').fetchall()
+    conn.commit()
     conn.close()
 
     transcriptions_list = [{'id': row[0], 'title': row[2], 'content': row[3]} for row in transcriptions]
     
     return jsonify(transcriptions=transcriptions_list), 200
 
+# @app.route('/delete', methods=['GET'])
+# @cross_origin()
+# def delete():
+#     # Retrieves all transcriptions from the database
+#     conn = get_db_connection()
+#     transcriptions = conn.execute('SELECT * FROM transcriptions').fetchall()
+#     conn.close()
+
+#     transcriptions_list = [{'id': row[0], 'title': row[2], 'content': row[3]} for row in transcriptions]
+    
+#     return jsonify(transcriptions=transcriptions_list), 200
+
 @app.route('/search', methods=['GET'])
+@cross_origin()
 def search():
     # Performs a full-text search on transcriptions based on audio file name. (You are given 3 audio files to use for this assignment)
-    return 'Status of the service', 200
+    title = request.args.get('title')
+    logging.info(f'Received search title: {title}')  # Log the title
+
+    conn = get_db_connection()
+    transcriptions = conn.execute('SELECT * FROM transcriptions WHERE LOWER(content) LIKE LOWER(?)', ('%' + title.strip() + '%',)).fetchall()
+    conn.commit()
+    conn.close()
+
+    logging.info(f'Found transcriptions: {transcriptions}')
+
+    transcriptions_list = [{'id': row[0], 'title': row[2], 'content': row[3]} for row in transcriptions]
+    
+    return jsonify(transcriptions=transcriptions_list), 200
 
 if __name__ == '__main__':
     app.run(debug=True)

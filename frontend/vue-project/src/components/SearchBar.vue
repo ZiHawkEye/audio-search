@@ -8,44 +8,52 @@
   />
   <div
     class="item transcription"
-    v-for="transcription in filteredList()"
-    :key="transcription"
+    v-for="transcription in transcriptions"
+    :key="transcription.id"
   >
     <p>{{ transcription.content }}</p>
   </div>
-  <div class="item error" v-if="input && !filteredList().length">
+  <div class="item error" v-if="input && !transcriptions.length">
     <p>No results found!</p>
   </div>
 </template>
 
 // Note: uses script setup instead of script
 <script setup>
-  import { ref, onMounted } from 'vue'
+  import { ref, watch } from 'vue'
   import axios from 'axios'
 
   // Define reactive state
   const transcriptions = ref([])
   const input = ref('')
 
-  // Makes a request to the backend once mounted
-  onMounted(() => {
-    axios
-      .get('http://127.0.0.1:5000/transcriptions')
-      .then((response) => {
-        console.log(response.data.transcriptions)
-        transcriptions.value = response.data.transcriptions
-      })
-      .catch((error) => {
-        console.error('Error fetching data:', error)
-      })
+  // Filters for transcriptions by their content
+  const filteredList = async () => {
+    if (!input.value) {
+      console.warn('Input is empty, skipping request.')
+      transcriptions.value = [] // Clear results if input is empty
+      return
+    }
+
+    try {
+      const response = await axios.get(
+        `http://127.0.0.1:5000/search?title=${input.value}`
+      )
+      console.log(response.data.transcriptions)
+      transcriptions.value = response.data.transcriptions // Update transcriptions with the results
+    } catch (error) {
+      console.error('Error fetching data:', error)
+      transcriptions.value = []
+    }
+  }
+
+  // Watch for changes in the input value
+  watch(input, (newValue) => {
+    filteredList()
   })
 
-  // Filters for transcriptions by their content
-  const filteredList = () => {
-    return transcriptions.value.filter((transcription) =>
-      transcription.content.toLowerCase().includes(input.value.toLowerCase())
-    )
-  }
+  // Call filteredList on component mount to fetch initial data
+  // filteredList();
 </script>
 
 <style>
