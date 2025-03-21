@@ -10,9 +10,7 @@
           @change="handleFileUpload($event)"
         />
       </label>
-      <br />
       <audio id="audio-preview" controls v-show="file != ''" />
-      <br />
       <button v-on:click="submitFile()">Submit File</button>
     </div>
   </div>
