@@ -77,18 +77,19 @@ def transcriptions():
     
     return jsonify(transcriptions=transcriptions_list), 200
 
-# @app.route('/delete', methods=['GET'])
-# @cross_origin()
-# def delete():
-#     # Retrieves all transcriptions from the database
-#     conn = get_db_connection()
-#     transcriptions = conn.execute('SELECT * FROM transcriptions').fetchall()
-#     conn.close()
+@app.route('/delete', methods=['DELETE'])
+@cross_origin()
+def delete():
+    try:
+        # Retrieves all transcriptions from the database
+        conn = get_db_connection()
+        transcriptions = conn.execute('DELETE * FROM transcriptions WHERE id = ?', (id,)).fetchall()
+        conn.close()
 
-#     transcriptions_list = [{'id': row[0], 'title': row[2], 'content': row[3]} for row in transcriptions]
+        return jsonify({'message': 'Transcription deleted successfully'}), 200
+    except Exception as e:
+        return jsonify({'error': str(e)}), 500
     
-#     return jsonify(transcriptions=transcriptions_list), 200
-
 @app.route('/search', methods=['GET'])
 @cross_origin()
 def search():

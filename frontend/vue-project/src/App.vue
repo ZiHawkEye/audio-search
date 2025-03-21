@@ -22,20 +22,8 @@
       }
     },
     mounted() {
-      axios
-        .get('http://127.0.0.1:5000/transcriptions')
-        .then((response) => {
-          console.log(response.data)
-          this.items = response.data
-        })
-        .catch((error) => {
-          console.error('Error fetching data:', error)
-        })
     },
     methods: {
-      pretty(value) {
-        return JSON.stringify(value, null, 2)
-      },
     },
   }
 </script>
@@ -50,5 +38,9 @@
     margin-top: 60px;
     max-width: 600px;
     margin: auto;
+	display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh; 
   }
 </style>
