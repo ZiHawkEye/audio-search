@@ -65,7 +65,7 @@
           .then(function () {
             console.log('SUCCESS!!')
             alert(
-              'Upload succeeded, please check the results by searching the file name in the search bar '
+              'Upload succeeded, please check the results by pressing "Show All Transcriptions" '
             )
           })
           .catch(function () {
