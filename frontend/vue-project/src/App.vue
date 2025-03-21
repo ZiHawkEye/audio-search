@@ -38,11 +38,12 @@
     text-align: center;
     color: #2c3e50;
     margin-top: 60px;
-    max-width: 600px;
+    max-width: 1600px;
     margin: auto;
     justify-content: center;
     align-items: center;
     height: 100vh;
+	display: flex; 
   }
 
   .container {
@@ -55,8 +56,11 @@
     flex: 1;
     margin: 10px;
     padding: 20px;
+    max-height: 500px;
+    width: 500px;
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #f9f9f9;
+	overflow: auto;
   }
 </style>
