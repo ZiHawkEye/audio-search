@@ -13,6 +13,7 @@
   >
     <p>{{ transcription.title }}</p>
     <p>{{ transcription.content }}</p>
+    <button @click="deleteTranscription(transcription.id)">Delete</button> 
   </div>
   <div class="item error" v-if="input && !transcriptions.length">
     <p>No results found!</p>
@@ -49,6 +50,15 @@
 
   // Call getTranscriptions() on component mount to fetch initial data
   getTranscriptions()
+
+  const deleteTranscription = async (id) => {
+    try {
+      await axios.delete(`http://127.0.0.1:5000/delete?id=${id}`);
+      transcriptions.value = transcriptions.value.filter(t => t.id !== id);
+    } catch (error) {
+      console.error('Error deleting transcription:', error);
+    }
+  }
 </script>
 
 <style>
