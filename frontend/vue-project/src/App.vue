@@ -1,7 +1,11 @@
 <template>
-  <div>
-    <audio-preview />
-    <search-bar />
+  <div class="container">
+    <div class="component">
+      <audio-preview />
+    </div>
+    <div class="component">
+      <search-bar />
+    </div>
   </div>
 </template>
 
@@ -36,9 +40,23 @@
     margin-top: 60px;
     max-width: 600px;
     margin: auto;
-    display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+  }
+
+  .container {
+    display: flex;
+    justify-content: space-between;
+    width: 80%;
+  }
+
+  .component {
+    flex: 1;
+    margin: 10px;
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
   }
 </style>
