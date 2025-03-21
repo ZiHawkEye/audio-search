@@ -28,12 +28,7 @@
   const input = ref('')
 
   // Filters for transcriptions by their content
-  const filteredList = async () => {
-    if (!input.value) {
-      console.warn('Input is empty, skipping request.')
-      transcriptions.value = [] // Clear results if input is empty
-      return
-    }
+  const getTranscriptions = async () => {
 
     try {
       const response = await axios.get(
@@ -49,11 +44,11 @@
 
   // Watch for changes in the input value
   watch(input, (newValue) => {
-    filteredList()
+    getTranscriptions()
   })
 
-  // Call filteredList on component mount to fetch initial data
-  // filteredList();
+  // Call getTranscriptions() on component mount to fetch initial data
+  getTranscriptions();
 </script>
 
 <style>
