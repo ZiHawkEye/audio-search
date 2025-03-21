@@ -80,8 +80,8 @@ def transcriptions():
 @app.route('/delete', methods=['DELETE'])
 @cross_origin()
 def delete():
+    # Delete transcription
     try:
-        # Retrieves all transcriptions from the database
         conn = get_db_connection()
         transcriptions = conn.execute('DELETE * FROM transcriptions WHERE id = ?', (id,)).fetchall()
         conn.close()
