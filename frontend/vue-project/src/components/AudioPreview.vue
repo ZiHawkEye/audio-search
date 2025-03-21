@@ -54,6 +54,8 @@
         formData.append('audio', this.file)
         formData.append('filename', this.fileName)
 
+        alert('Transcribing audio, please be patient...')
+
         axios
           .post('http://127.0.0.1:5000/transcribe', formData, {
             headers: {
@@ -62,9 +64,13 @@
           })
           .then(function () {
             console.log('SUCCESS!!')
+            alert(
+              'Upload succeeded, please check the results by searching the file name in the search bar '
+            )
           })
           .catch(function () {
             console.log('FAILURE!!')
+            alert('Upload failed! Please try again.')
           })
       },
     },

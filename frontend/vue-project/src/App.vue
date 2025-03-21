@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="component">
-      <audio-preview />
+      <AudioPreview />
     </div>
     <div class="component">
-      <search-bar />
+      <SearchBar />
     </div>
   </div>
 </template>
