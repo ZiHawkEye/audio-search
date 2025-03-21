@@ -43,7 +43,7 @@
     justify-content: center;
     align-items: center;
     height: 100vh;
-	display: flex; 
+    display: flex;
   }
 
   .container {
@@ -61,6 +61,6 @@
     border: 1px solid #ccc;
     border-radius: 8px;
     background-color: #f9f9f9;
-	overflow: auto;
+    overflow: auto;
   }
 </style>
