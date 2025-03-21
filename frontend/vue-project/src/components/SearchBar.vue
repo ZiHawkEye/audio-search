@@ -29,7 +29,6 @@
 
   // Filters for transcriptions by their content
   const getTranscriptions = async () => {
-
     try {
       const response = await axios.get(
         `http://127.0.0.1:5000/search?title=${input.value}`
@@ -48,7 +47,7 @@
   })
 
   // Call getTranscriptions() on component mount to fetch initial data
-  getTranscriptions();
+  getTranscriptions()
 </script>
 
 <style>

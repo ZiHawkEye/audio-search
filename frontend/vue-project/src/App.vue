@@ -21,10 +21,8 @@
         items: [],
       }
     },
-    mounted() {
-    },
-    methods: {
-    },
+    mounted() {},
+    methods: {},
   }
 </script>
 
@@ -38,9 +36,9 @@
     margin-top: 60px;
     max-width: 600px;
     margin: auto;
-	display: flex; 
-    justify-content: center; 
-    align-items: center; 
-    height: 100vh; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
   }
 </style>
