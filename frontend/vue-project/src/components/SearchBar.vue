@@ -11,6 +11,7 @@
     v-for="transcription in transcriptions"
     :key="transcription.id"
   >
+    <p>{{ transcription.title }}</p>
     <p>{{ transcription.content }}</p>
   </div>
   <div class="item error" v-if="input && !transcriptions.length">
