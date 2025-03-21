@@ -1,11 +1,18 @@
 import sqlite3
+import os
 
-connection = sqlite3.connect('database.db')
+def init_db():
+    connection = sqlite3.connect('database.db')
 
-with open('./backend/schema.sql') as f:
-    connection.executescript(f.read())
+    # Get the absolute path to schema.sql
+    schema_path = os.path.join(os.path.dirname(__file__), 'schema.sql')
 
-cur = connection.cursor()
+    with open(schema_path) as f:
+        connection.executescript(f.read())
 
-connection.commit()
-connection.close()
+    cur = connection.cursor()
+
+    connection.commit()
+    connection.close()
+
+init_db()

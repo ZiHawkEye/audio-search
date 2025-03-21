@@ -9,6 +9,7 @@ import tempfile
 import sqlite3
 from pydub import AudioSegment
 from flask_cors import CORS, cross_origin
+from backend.init_db import init_db
 
 logging.basicConfig(level=logging.INFO)
 
@@ -81,9 +82,15 @@ def transcriptions():
 @cross_origin()
 def delete():
     # Delete transcription
+    id = request.args.get('id')
+
+    if not id:
+        return jsonify({'error': 'No transcription ID provided'}), 400
+
     try:
         conn = get_db_connection()
-        transcriptions = conn.execute('DELETE * FROM transcriptions WHERE id = ?', (id,)).fetchall()
+        conn.execute('DELETE FROM transcriptions WHERE id = ?', (id,))
+        conn.commit()
         conn.close()
 
         return jsonify({'message': 'Transcription deleted successfully'}), 200

@@ -1,4 +1,4 @@
-DROP TABLE IF EXISTS posts;
+DROP TABLE IF EXISTS transcriptions;
 
 CREATE TABLE transcriptions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
