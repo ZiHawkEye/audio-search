@@ -31,6 +31,13 @@ def test_transcribe(client):
         assert response.status_code == 200
         assert 'transcription' in response.json
 
+def test_search(client):
+    # Test /search
+    title = 'test_audio'
+    response = client.get(f'/search?title={title}')
+    assert response.status_code == 200
+    assert 'transcriptions' in response.json
+
 def test_delete(client):
     # Test /delete 
     id = 1

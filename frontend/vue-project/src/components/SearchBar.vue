@@ -19,7 +19,7 @@
   </div>
 </template>
 
-// Note: uses script setup instead of script
+// Note: Uses script setup instead of script
 <script setup>
   import { ref, watch } from 'vue'
   import axios from 'axios'
@@ -93,8 +93,7 @@
       rgba(0, 0, 0, 0.06) 0px 1px 2px 0px;
   }
 
-  .fruit {
-    background-color: rgb(97, 62, 252);
+  .transcription {
     cursor: pointer;
   }
 
