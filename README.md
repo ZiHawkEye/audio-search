@@ -1,30 +1,67 @@
 # audio-search
 
+A full stack app for transcribing and searching audio files.
+
+## Development Setup
+
+### Required Dependencies
+
+#### Backend
+- Python 3.9+
+- Docker
+
+#### Frontend
+- Node.js 16+
+- npm 7+
 
 ## Quick Start
 
 1. Clone the repository:
 ```bash
-git clone [your-repo-url]
+git clone https://github.com/ZiHawkEye/audio-search.git
 cd audio-search
 ```
 
-2. Create and activate a virtual environment:
+2. Create and activate a virtual environment (Python 3.9 is required):
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
+
+# Install requirements
+pip install -r backend/requirements.txt
+
+# Install frontend dependencies
+cd frontend
+npm install
+cd ..
 ```
 
-3. Install dependencies:
+## Running the Application
+
+### Backend
+
+1. Start the backend server in a Docker container:
 ```bash
-pip install -r requirements.txt
+run_backend_container.sh
 ```
 
-4. Create necessary Python package files:
+The backend API will be available at `http://localhost:5000`
+
+### Frontend
+
+1. Start the frontend development server in a Docker container:
 ```bash
-touch src/__init__.py src/detector/__init__.py src/web/__init__.py
+run_frontend_container.sh
 ```
 
-5. Run unit tests for backend
+The frontend will be available at `http://localhost:8080`
 
-6. Run unit tests for frontend
+## Running Tests
+
+### Unit Tests
+
+1. Ensure you're in the project root and your Python virtual environment is activated, as well as installed the required dependencies for both frontend and backend
+```bash
+# Run all unit tests
+bash run_unit_tests.sh
+```

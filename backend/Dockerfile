@@ -17,8 +17,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Set environment variable for CORS, change if frontend is not locally hosted
 ENV ALLOWED_ORIGINS="http://localhost:80"
 
-# Make port 5000 available to the world outside this container
+# Expose port 5000
 EXPOSE 5000
 
-# Run app.py when the container launches
-CMD ["python", "app.py"]
+# CMD ["python", "app.py"]
+
+# Use gunicorn instead of Flask's development server
+CMD ["gunicorn", "--bind", "0.0.0.0:5000", "app:app"]
