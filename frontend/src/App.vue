@@ -12,7 +12,6 @@
 <script>
   import AudioPreview from './components/AudioPreview.vue'
   import SearchBar from './components/SearchBar.vue'
-  import axios from 'axios'
 
   export default {
     name: 'App',
