@@ -15,6 +15,17 @@ logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
 
+# Get allowed origins from environment variable, change if frontend is not locally hosted
+ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORIGINS', 'http://localhost:5173').split(',')  
+
+CORS(app, resources={
+    r"/*": {
+        "origins": ALLOWED_ORIGINS,
+        "methods": ["GET", "POST", "DELETE"],
+        "allow_headers": ["Content-Type"]
+    }
+})
+
 model = whisper.load_model("base")
 
 def get_db_connection():

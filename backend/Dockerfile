@@ -14,6 +14,9 @@ COPY . /app
 # RUN pip install --no-cache-dir git+https://github.com/openai/whisper.git
 RUN pip install --no-cache-dir -r requirements.txt
 
+# Set environment variable for CORS, change if frontend is not locally hosted
+ENV ALLOWED_ORIGINS="http://localhost:80"
+
 # Make port 5000 available to the world outside this container
 EXPOSE 5000
 
