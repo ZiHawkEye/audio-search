@@ -1,5 +1,5 @@
 # Use an official Python runtime as a parent image
-FROM python:3.9-slim
+FROM python:3.9
 
 # Install ffmpeg for audio processing
 RUN apt-get update && apt-get install -y ffmpeg && apt-get clean
@@ -10,7 +10,7 @@ WORKDIR /app
 # Copy the current directory contents into the container at /app
 COPY . /app
 
-# Install Whisper and other Python dependencies
+# Install Python dependencies
 # RUN pip install --no-cache-dir git+https://github.com/openai/whisper.git
 RUN pip install --no-cache-dir -r requirements.txt
 

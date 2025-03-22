@@ -24,3 +24,7 @@ pip install -r requirements.txt
 ```bash
 touch src/__init__.py src/detector/__init__.py src/web/__init__.py
 ```
+
+5. Run unit tests for backend
+
+6. Run unit tests for frontend

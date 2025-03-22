@@ -9,7 +9,7 @@ import tempfile
 import sqlite3
 from pydub import AudioSegment
 from flask_cors import CORS, cross_origin
-from backend.init_db import init_db
+from init_db import init_db
 
 logging.basicConfig(level=logging.INFO)
 
@@ -41,7 +41,7 @@ def transcribe_audio(file_path):
 @app.route('/transcribe', methods=['POST'])
 @cross_origin()
 def transcribe():
-    # Accepts audio files, performs transcription and save results in database.
+    # Accepts audio files, performs transcription and saves results in database.
     if 'audio' not in request.files:
         return jsonify({'error': 'No audio file provided'}), 400
     
@@ -74,7 +74,7 @@ def transcriptions():
     conn.commit()
     conn.close()
 
-    transcriptions_list = [{'id': row[0], 'title': row[2], 'content': row[3]} for row in transcriptions]
+    transcriptions_list = [{'id': row[0], 'created': row[1], 'title': row[2], 'content': row[3]} for row in transcriptions]
     
     return jsonify(transcriptions=transcriptions_list), 200
 
@@ -111,9 +111,10 @@ def search():
 
     logging.info(f'Found transcriptions: {transcriptions}')
 
-    transcriptions_list = [{'id': row[0], 'title': row[2], 'content': row[3]} for row in transcriptions]
+    transcriptions_list = [{'id': row[0], 'created': row[1], 'title': row[2], 'content': row[3]} for row in transcriptions]
     
     return jsonify(transcriptions=transcriptions_list), 200
 
 if __name__ == '__main__':
-    app.run(debug=True)
+    # app.run(debug=True)
+    app.run(host='0.0.0.0', port=5000)
