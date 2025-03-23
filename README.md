@@ -52,7 +52,7 @@ The backend API will be available at `http://localhost:5000`
 
 ### Frontend
 
-1. Start the frontend development server in a Docker container:
+1. Start the frontend server in a Docker container:
 ```bash
 run_frontend_container.sh
 ```

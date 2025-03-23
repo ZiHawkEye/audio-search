@@ -56,6 +56,45 @@ graph TB
     - Timestamp of creation
 
 #### External Services
-- OpenAI Whisper (running locally)
-  - Used for audio transcription
-  - Base model implementation
+- OpenAI Whisper 
+  - Running locally in backend, used for audio transcription
+
+### Assumptions
+#### 1. Scale & Performance
+- Assumes relatively small user base 
+  - SQLite database is sufficient for the load
+  - No need for connection pooling or load balancing due to single instance operation
+  - Limited support for concurrent requests - Whisper model runs synchronously
+  - No rate limiting on API endpoints
+- Assumes audio files are of reasonable size
+  - No chunking mechanism for large file uploads
+  - No progress indicators for long-running transcriptions
+
+#### 2. Security & Privacy
+- Assumes development/testing environment
+  - CORS is configured for localhost only
+  - No authentication/authorization implemented
+- Assumes audio content is not sensitive data
+  - Transcriptions stored in plain text
+
+#### 3. Infrastructure
+- Assumes local development
+  - Docker containers run on same host
+  - Direct communication between services
+- Assumes reliable network
+  - No retry mechanisms
+  - Simple error handling
+
+#### 4. Client Environment
+- Assumes desktop-first usage
+  - Fixed dimensions of components
+  - Limited responsive design, not designed for mobile
+
+### Future Extensions
+1. **Scalability**: 
+  - Replace SQLite with PostgreSQL to support concurrency
+  - Implement a job queue for transcriptions
+2. **Security**: 
+  - CORS policies implemented for frontend-backend communication, implement CSRF, authentication
+  - Implement client side transcription and encryption of transcriptions when sent to backend server
+
