@@ -26,7 +26,7 @@ CORS(app, resources={
     }
 })
 
-model = whisper.load_model("base")
+model = whisper.load_model("tiny")
 
 def get_db_connection():
     # Gets the SQL DB connection

@@ -22,7 +22,7 @@ git clone https://github.com/ZiHawkEye/audio-search.git
 cd audio-search
 ```
 
-2. Create and activate a virtual environment (Python 3.9 is required) to install backend dependencies:
+2. Create and activate a virtual environment to install backend dependencies:
 ```bash
 python -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
