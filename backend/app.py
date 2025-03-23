@@ -1,5 +1,6 @@
 # Reference: https://www.digitalocean.com/community/tutorials/how-to-use-an-sqlite-database-in-a-flask-application
 # Reference: https://thedavidmasters.com/2024/09/11/how-to-build-and-run-a-flask-api-with-openais-whisper-local-model-using-docker/
+# Reference: https://testdriven.io/blog/csrf-flask/
 
 import logging
 from flask import Flask, render_template, request, jsonify
@@ -9,11 +10,14 @@ import tempfile
 import sqlite3
 from pydub import AudioSegment
 from flask_cors import CORS, cross_origin
+from flask_wtf.csrf import CSRFProtect, generate_csrf
 from init_db import init_db
 
 logging.basicConfig(level=logging.INFO)
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'secret-key')
+csrf = CSRFProtect(app) 
 
 # Get allowed origins from environment variable, change if frontend is not locally hosted
 ALLOWED_ORIGINS = os.environ.get('ALLOWED_ORIGINS', 'http://localhost:5173').split(',')  
@@ -22,7 +26,9 @@ CORS(app, resources={
     r"/*": {
         "origins": ALLOWED_ORIGINS,
         "methods": ["GET", "POST", "DELETE"],
-        "allow_headers": ["Content-Type"]
+        "allow_headers": ["Content-Type", "X-CSRF-Token"],
+        "expose_headers": ["X-CSRF-Token"],
+        "supports_credentials": True
     }
 })
 
@@ -33,6 +39,13 @@ def get_db_connection():
     conn = sqlite3.connect('database.db')
     conn.row_factory = sqlite3.Row
     return conn
+
+@app.route('/csrf-token', methods=['GET'])
+def get_csrf_token():
+    # Endpoint to get CSRF token
+    token = generate_csrf()
+    # print("token", token)
+    return jsonify({'csrf_token': token})
 
 @app.route('/health', methods=['GET'])
 def health():
@@ -50,7 +63,6 @@ def transcribe_audio(file_path):
     return result['text']
 
 @app.route('/transcribe', methods=['POST'])
-@cross_origin()
 def transcribe():
     # Accepts audio files, performs transcription and saves results in database.
     if 'audio' not in request.files:
@@ -77,7 +89,6 @@ def transcribe():
         os.remove(tmp_file_path)
 
 @app.route('/transcriptions', methods=['GET'])
-@cross_origin()
 def transcriptions():
     # Retrieves all transcriptions from the database
     conn = get_db_connection()
@@ -90,7 +101,6 @@ def transcriptions():
     return jsonify(transcriptions=transcriptions_list), 200
 
 @app.route('/delete', methods=['DELETE'])
-@cross_origin()
 def delete():
     # Delete transcription
     id = request.args.get('id')
@@ -109,7 +119,6 @@ def delete():
         return jsonify({'error': str(e)}), 500
     
 @app.route('/search', methods=['GET'])
-@cross_origin()
 def search():
     # Performs a full-text search on transcriptions based on audio file name. (You are given 3 audio files to use for this assignment)
     title = request.args.get('title')

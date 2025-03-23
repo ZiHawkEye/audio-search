@@ -23,12 +23,23 @@
 
 // Note: Uses script setup instead of script
 <script setup>
-  import { ref, watch } from 'vue'
+  import { ref, watch, onMounted } from 'vue'
   import axios from 'axios'
 
   // Define reactive state
   const transcriptions = ref([])
   const input = ref('')
+
+  const getCsrfToken = async () => {
+    try {
+      const response = await axios.get('http://127.0.0.1:5000/csrf-token')
+      // Configure axios to include CSRF token in headers
+      axios.defaults.headers.common['X-CSRF-Token'] = response.data.csrf_token
+      axios.defaults.withCredentials = true
+    } catch (error) {
+      console.error('Error fetching CSRF token:', error)
+    }
+  }
 
   // Filters for transcriptions by their content
   const getTranscriptions = async () => {
@@ -56,11 +67,18 @@
   })
 
   // Call getTranscriptions() on component mount to fetch initial data
-  getTranscriptions()
+  // Get CSRF token when component mounts
+  onMounted(async () => {
+    await getCsrfToken()
+    getTranscriptions()
+  })
 
   const deleteTranscription = async (id) => {
     try {
-      await axios.delete(`http://127.0.0.1:5000/delete?id=${id}`)
+      await axios.delete(`http://127.0.0.1:5000/delete?id=${id}`, {
+        headers: {
+        },
+      })
       transcriptions.value = transcriptions.value.filter((t) => t.id !== id)
     } catch (error) {
       console.error('Error deleting transcription:', error)

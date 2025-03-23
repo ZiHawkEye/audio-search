@@ -24,11 +24,28 @@
     data() {
       return {
         file: '',
-        fileName: '',
+        fileName: ''
       }
     },
 
+    async mounted() {
+      // Get CSRF token when component mounts
+      await this.getCsrfToken()
+    },
+
     methods: {
+      async getCsrfToken() {
+        try {
+          const response = await axios.get('http://127.0.0.1:5000/csrf-token')
+          // console.log("Fetched CSRF token successfully", response.data.csrf_token)
+          // Configure axios to include CSRF token in headers
+          axios.defaults.headers.common['X-CSRF-Token'] = response.data.csrf_token
+          axios.defaults.withCredentials = true
+        } catch (error) {
+          console.error('Error fetching CSRF token:', error)
+        }
+      },
+
       handleFileUpload(event) {
         this.file = event.target.files[0]
         if (this.file) {
