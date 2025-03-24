@@ -1,4 +1,5 @@
-// Reference: https://github.com/canopas/vue-file-upload/tree/main
+// Reference:
+https://github.com/serversideup/uploading-files-vuejs-axios/tree/main
 <template>
   <div class="container">
     <div>
@@ -6,6 +7,7 @@
         >Upload an audio file for transcription
         <input
           type="file"
+          multiple
           accept="audio/*"
           @change="handleFileUpload($event)"
         />
@@ -25,6 +27,7 @@
       return {
         file: '',
         fileName: '',
+        files: '',
       }
     },
 
@@ -36,6 +39,7 @@
           console.log('Uploaded file name:', this.fileName)
           this.previewAudio()
         }
+        this.files = event.target.files
       },
 
       previewAudio() {
@@ -51,8 +55,10 @@
       submitFile() {
         let formData = new FormData()
 
-        formData.append('audio', this.file)
-        formData.append('filename', this.fileName)
+        for (var i = 0; i < this.files.length; i++) {
+          formData.append('audio', this.files[i])
+          formData.append('filename', this.files[i].name)
+        }
 
         alert('Transcribing audio, please be patient...')
 

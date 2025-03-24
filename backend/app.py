@@ -55,26 +55,33 @@ def transcribe():
     # Accepts audio files, performs transcription and saves results in database.
     if 'audio' not in request.files:
         return jsonify({'error': 'No audio file provided'}), 400
+
+    audio_files = request.files.getlist('audio')
+    filenames = request.form.getlist('filename')
+    transcriptions = []
+    tmp_file_paths = []
     
-    audio_file = request.files['audio']
-    filename = request.form['filename']
-
-    with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
-        audio_file.save(tmp_file.name)
-        tmp_file_path = tmp_file.name
     try:
-        transcription = transcribe_audio(tmp_file_path)
+        for audio_file, filename in zip(audio_files, filenames):
+            with tempfile.NamedTemporaryFile(delete=False) as tmp_file:
+                tmp_file_path = tmp_file.name
+                audio_file.save(tmp_file_path)
+                tmp_file_paths.append(tmp_file_path)
 
-        conn = get_db_connection()
-        conn.execute('INSERT INTO transcriptions (title, content) VALUES (?, ?)', (filename, transcription))
-        conn.commit()
-        conn.close()
+                transcription = transcribe_audio(tmp_file_path)
 
-        return jsonify({'transcription': transcription}), 200
+                conn = get_db_connection()
+                conn.execute('INSERT INTO transcriptions (title, content) VALUES (?, ?)', (filename, transcription))
+                conn.commit()
+                conn.close()
+                
+                transcriptions.append(transcription)
+        return jsonify({'transcription': transcriptions}), 200
     except Exception as e:
         return jsonify({'error': str(e)}), 500
     finally:
-        os.remove(tmp_file_path)
+        for tmp_file_path in tmp_file_paths:
+            os.remove(tmp_file_path)
 
 @app.route('/transcriptions', methods=['GET'])
 @cross_origin()
@@ -113,7 +120,7 @@ def delete():
 def search():
     # Performs a full-text search on transcriptions based on audio file name. (You are given 3 audio files to use for this assignment)
     title = request.args.get('title')
-    logging.info(f'Received search title: {title}')  # Log the title
+    logging.info(f'Received search title: {title}')
 
     conn = get_db_connection()
     transcriptions = conn.execute('SELECT * FROM transcriptions WHERE LOWER(title) LIKE LOWER(?)', ('%' + title.strip() + '%',)).fetchall()
