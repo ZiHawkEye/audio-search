@@ -12,8 +12,25 @@ https://github.com/serversideup/uploading-files-vuejs-axios/tree/main
           @change="handleFileUpload($event)"
         />
       </label>
-      <audio id="audio-preview" controls v-show="file != ''" />
-      <button v-on:click="submitFile()">Submit File</button>
+      <div v-if="files.length > 0" class="file-preview-container">
+        <h3>Selected Files:</h3>
+        <div v-for="(file, index) in files" :key="index" class="file-preview">
+          <div class="file-info">
+            <span>{{ file.name }}</span>
+            <button @click="removeFile(index)" class="remove-btn">
+              Remove
+            </button>
+          </div>
+          <audio
+            :src="filePreviewUrls[index]"
+            controls
+            class="audio-player"
+          ></audio>
+        </div>
+      </div>
+      <button v-if="files.length > 0" v-on:click="submitFile()">
+        Submit File
+      </button>
     </div>
   </div>
 </template>
@@ -25,21 +42,34 @@ https://github.com/serversideup/uploading-files-vuejs-axios/tree/main
   export default {
     data() {
       return {
-        file: '',
-        fileName: '',
-        files: '',
+        files: [],
+        filePreviewUrls: [],
       }
     },
 
     methods: {
       handleFileUpload(event) {
-        this.file = event.target.files[0]
-        if (this.file) {
-          this.fileName = this.file.name
-          console.log('Uploaded file name:', this.fileName)
-          this.previewAudio()
+        const selectedFiles = event.target.files
+
+        if (!selectedFiles.length) return
+
+        for (let i = 0; i < selectedFiles.length; i++) {
+          this.files.push(selectedFiles[i])
+          console.log('Uploaded file name:', selectedFiles[i].name)
+
+          // Create a URL for preview
+          const url = URL.createObjectURL(selectedFiles[i])
+          this.filePreviewUrls.push(url)
         }
-        this.files = event.target.files
+      },
+
+      removeFile(index) {
+        // Revoke the URL to prevent memory leaks
+        URL.revokeObjectURL(this.filePreviewUrls[index])
+
+        // Remove the file and its preview URL
+        this.files.splice(index, 1)
+        this.filePreviewUrls.splice(index, 1)
       },
 
       previewAudio() {
@@ -68,14 +98,16 @@ https://github.com/serversideup/uploading-files-vuejs-axios/tree/main
               'Content-Type': 'multipart/form-data',
             },
           })
-          .then(function () {
-            console.log('SUCCESS!!')
+          .then(() => {
+            console.log('Upload succeeded')
+            this.files = []
+            this.filePreviewUrls = []
             alert(
               'Upload succeeded, please check the results by pressing "Show All Transcriptions" '
             )
           })
-          .catch(function () {
-            console.log('FAILURE!!')
+          .catch((error) => {
+            console.error('Upload failed:', error)
             alert('Upload failed! Please try again.')
           })
       },
