@@ -28,7 +28,18 @@ https://github.com/serversideup/uploading-files-vuejs-axios/tree/main
           ></audio>
         </div>
       </div>
-      <button v-if="files.length > 0" v-on:click="submitFile()">
+
+      <div
+        class="upload-status"
+        v-if="uploadProgress > 0 && uploadProgress <= 100"
+      >
+        Uploading {{ uploadProgress }}%... please be patient
+        <div class="progress-bar">
+          <div class="progress" :style="{ width: uploadProgress + '%' }"></div>
+        </div>
+      </div>
+
+      <button v-if="files.length > 0 && !isUploading" v-on:click="submitFile()">
         Submit File
       </button>
     </div>
@@ -44,6 +55,8 @@ https://github.com/serversideup/uploading-files-vuejs-axios/tree/main
       return {
         files: [],
         filePreviewUrls: [],
+        uploadProgress: 0,
+        isUploading: false,
       }
     },
 
@@ -83,6 +96,9 @@ https://github.com/serversideup/uploading-files-vuejs-axios/tree/main
       },
 
       submitFile() {
+        this.isUploading = true
+        this.uploadProgress = 0
+
         let formData = new FormData()
 
         for (var i = 0; i < this.files.length; i++) {
@@ -90,27 +106,56 @@ https://github.com/serversideup/uploading-files-vuejs-axios/tree/main
           formData.append('filename', this.files[i].name)
         }
 
-        alert('Transcribing audio, please be patient...')
+        // alert('Transcribing audio, please be patient...')
 
         axios
           .post('http://127.0.0.1:5000/transcribe', formData, {
             headers: {
               'Content-Type': 'multipart/form-data',
             },
+            onUploadProgress: (progressEvent) => {
+              this.uploadProgress = Math.round(
+                (progressEvent.loaded * 100) / progressEvent.total
+              )
+              console.log('Upload progress: ' + this.uploadProgress)
+            },
           })
           .then(() => {
             console.log('Upload succeeded')
             this.files = []
             this.filePreviewUrls = []
+            this.isUploading = false
+            this.uploadProgress = 0
             alert(
               'Upload succeeded, please check the results by pressing "Show All Transcriptions" '
             )
           })
           .catch((error) => {
             console.error('Upload failed:', error)
+            this.isUploading = false
             alert('Upload failed! Please try again.')
           })
       },
     },
   }
 </script>
+
+<style scoped>
+  .upload-status {
+    margin: 15px 0;
+  }
+
+  .progress-bar {
+    height: 10px;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    margin-top: 5px;
+    overflow: hidden;
+  }
+
+  .progress {
+    height: 100%;
+    background-color: #1890ff;
+    transition: width 0.3s ease;
+  }
+</style>
