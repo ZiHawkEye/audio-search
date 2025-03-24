@@ -94,7 +94,10 @@ graph TB
 1. **Scalability**: 
   - Replace SQLite with PostgreSQL to support concurrency
   - Implement a job queue for transcriptions
+  - Add chunking of long audio files, asynchronous transcription
 2. **Security**: 
   - CORS policies implemented for frontend-backend communication, implement CSRF, authentication
   - Implement client side transcription and encryption of transcriptions when sent to backend server
+3. **UI**:
+  - Add responsive design
 
