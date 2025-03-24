@@ -11,8 +11,8 @@ A full stack app for transcribing and searching audio files.
 - Docker
 
 #### Frontend
-- Node.js 16+
-- npm 7+
+- Node.js 18+
+- npm 10+
 
 ## Quick Start
 
