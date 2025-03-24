@@ -44,8 +44,8 @@ cd ..
 ### Backend
 
 1. Start the backend server in a Docker container:
-```bash
-run_backend_container.sh
+```
+bash run_backend_container.sh
 ```
 
 The backend API will be available at `http://localhost:5000`
@@ -53,8 +53,8 @@ The backend API will be available at `http://localhost:5000`
 ### Frontend
 
 1. Start the frontend server in a Docker container:
-```bash
-run_frontend_container.sh
+```
+bash run_frontend_container.sh
 ```
 
 The frontend will be available at `http://localhost:8080`
